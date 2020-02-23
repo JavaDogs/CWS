@@ -177,6 +177,8 @@ public final class SettingService extends Serviceable<CommonDao, SettingResponse
                 checkCharset(setting, value);
                 break;
             case SANITY_INTERVAL:
+            case ACCOUNT_MAX_RETRIES:
+            case ACCOUNT_LOCKING_MINUTES:
                 checkNumber(setting, value);
                 break;
             case CWS_SALT:

@@ -40,7 +40,10 @@ public enum StandardSetting {
     SANITY_STARTUP("cws.sanity.check.startup", "true"),
     SANITY_INTERVAL("cws.sanity.check.interval.days", "180"),
     SESSION_TIMEOUT("cws.session.timeout.minutes", "480"),
+    ACCOUNT_MAX_RETRIES("cws.account.max.login.retries", "5"),
+    ACCOUNT_LOCKING_MINUTES("cws.account.locking.minutes", "30"),
     MASTERKEY_URL("cws.masterkey.url", ""),
+    CORS("cws.cors.value", "https://javadog.io/"),
     // The isReady setting is set by the StartUp bean, and thus not persisted.
     IS_READY("cws.is.ready", "true");
 

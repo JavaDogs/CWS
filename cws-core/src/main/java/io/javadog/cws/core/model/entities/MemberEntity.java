@@ -107,6 +107,13 @@ public class MemberEntity extends Externable {
     @Column(name = "session_expire")
     private Date sessionExpire = null;
 
+    @Column(name = "login_retries")
+    private int loginRetries = 0;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "locked_until")
+    private Date lockedUntil = null;
+
     // =========================================================================
     // Entity Setters & Getters
     // =========================================================================
@@ -197,5 +204,21 @@ public class MemberEntity extends Externable {
 
     public Date getSessionExpire() {
         return Utilities.copy(sessionExpire);
+    }
+
+    public void setLoginRetries(final int loginRetries) {
+        this.loginRetries = loginRetries;
+    }
+
+    public int getLoginRetries() {
+        return loginRetries;
+    }
+
+    public void setLockedUntil(final Date lockedUntil) {
+        this.lockedUntil = Utilities.copy(lockedUntil);
+    }
+
+    public Date getLockedUntil() {
+        return Utilities.copy(lockedUntil);
     }
 }

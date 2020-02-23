@@ -221,6 +221,33 @@ public interface Management {
      *     Allowed Values: Any integer<br>
      *     <i>The maximum amount of time a Session may be used.</i>
      *   </li>
+     *   <li>
+     *     <b>cws.masterkey.url</b> - default value: ''<br>
+     *     Allowed Values: Any valid URL<br>
+     *     <i>Reference to a series of bytes, which will be used as the secret,
+     *     when generating the MasterKey. It must be reachable for the CWS
+     *     instance(s) at startup.</i>
+     *   </li>
+     *   <li>
+     *     <b>cws.cors.value</b> - default value: 'https://javadog.io/'<br>
+     *     Allowed Values: See <a href="https://enable-cors.org/">enable-cors</a><br>
+     *     <i>The Cross Origin Resource Sharing value, which determines who may
+     *     invoke the CWS. It is required for most JavaScript based Clients.<br>
+     *     The default value is deliberately set to the JavaDog homepage, since
+     *     it should either be correctly configured or ignored.</i>
+     *   </li>
+     *   <li>
+     *     <b>cws.account.max.login.retries</b> - default value: '5'<br>
+     *     Allowed Values: Any positive integer<br>
+     *     <i>The maximum number of unsuccessful login retries a user have
+     *     before the account is being locked for a number of minutes.</i>
+     *   </li>
+     *   <li>
+     *     <b>cws.account.locking.minutes</b> - default value: '30'<br>
+     *     Allowed Values: Any positive integer<br>
+     *     <i>The number of minutes an account is suppose to be locked for, if
+     *     the maximum allowed login retries have been exceeded..</i>
+     *   </li>
      * </ul>
      *
      * @param request Request Object

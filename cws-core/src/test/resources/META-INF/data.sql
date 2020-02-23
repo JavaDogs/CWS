@@ -27,7 +27,10 @@ INSERT INTO cws_settings (name, setting) VALUES
     ('cws.sanity.check.startup', 'true'),
     ('cws.sanity.check.interval.days', '180'),
     ('cws.session.timeout.minutes', '480'),
+    ('cws.account.max.login.retries', '5'),
+    ('cws.account.locking.minutes', '30'),
     ('cws.masterkey.url', ''),
+    ('cws.cors.value', 'https://javadog.io/'),
     ('cws.is.ready', 'true');
 
 -- Default Administrator User, it is set at the first request to the System, and

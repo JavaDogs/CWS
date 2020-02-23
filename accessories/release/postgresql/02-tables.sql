@@ -136,6 +136,8 @@ CREATE TABLE cws_members (
   session_checksum VARCHAR(256),   -- MasterKey Checksum of the given Session
   session_crypto   VARCHAR(16384), -- Private Key, stored encrypted & armored
   session_expire   TIMESTAMP,      -- Time, when the Session expires
+  login_retries    INT DEFAULT 0,  -- Number of Login retries since last success
+  locked_until     TIMESTAMP,      -- Account locked until this time
   altered          TIMESTAMP DEFAULT now(),
   added            TIMESTAMP DEFAULT now(),
 
