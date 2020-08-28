@@ -249,6 +249,7 @@ public final class ProcessDataService extends Serviceable<DataDao, ProcessDataRe
             toSave.setMetadata(metadataEntity);
             toSave.setKey(keyEntity);
             toSave.setData(Crypto.encrypt(key, bytes));
+            toSave.setSize(bytes.length);
             toSave.setInitialVector(crypto.encryptWithMasterKey(armored));
             toSave.setChecksum(crypto.generateChecksum(toSave.getData()));
             toSave.setSanityStatus(SanityStatus.OK);

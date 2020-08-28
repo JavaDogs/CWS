@@ -11,12 +11,25 @@
 -- Part ONE: Creating Database & Roles
 -- -----------------------------------------------------------------------------
 -- Create the users needed for CWS. Please note, that the
--- default AppServer Configuration file is referring to these users & passwords.
+-- default AppServer Configuration file is referring to this user & password.
 -- So, if you use a different name and password, please also update this.
-create role cws_user with login password 'cws';
+-- DO $$
+--     BEGIN
+--     IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'cws_user') THEN
+        CREATE ROLE cws_user WITH LOGIN PASSWORD 'cws';
+--     END IF;
+--     COMMIT;
+-- END $$;
+
 
 -- Create the CWS database for the CWS User
-create database cws with owner = cws_user;
+-- DO $$
+--     BEGIN
+--     IF NOT EXISTS (SELECT FROM pg_catalog.pg_database WHERE datname = 'cws') THEN
+        CREATE DATABASE cws WITH OWNER = cws_user;
+--     END IF;
+--     COMMIT;
+-- END $$;
 -- -----------------------------------------------------------------------------
 
 
@@ -29,6 +42,7 @@ create database cws with owner = cws_user;
 
 -- Now, we can fill the database with tables, views & data
 \ir 02-tables.sql
+\ir 03-update.sql
 -- -----------------------------------------------------------------------------
 
 

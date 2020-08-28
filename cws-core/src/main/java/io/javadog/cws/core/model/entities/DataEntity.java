@@ -93,6 +93,9 @@ public class DataEntity extends CWSEntity {
     @Column(name = "encrypted_data", nullable = false)
     private byte[] data = null;
 
+    @Column(name = "size")
+    private Integer size = 0;
+
     @Column(name = "initial_vector", nullable = false, length = Constants.MAX_STRING_LENGTH)
     private String initialVector = null;
 
@@ -133,6 +136,14 @@ public class DataEntity extends CWSEntity {
 
     public byte[] getData() {
         return Utilities.copy(data);
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    public Integer getSize() {
+        return size;
     }
 
     public void setInitialVector(final String initialVector) {

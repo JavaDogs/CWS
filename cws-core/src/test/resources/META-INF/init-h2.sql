@@ -33,29 +33,31 @@
 -- this table.
 -- =============================================================================
 CREATE TABLE cws_versions (
-  id               INTEGER AUTO_INCREMENT,
-  schema_version   INTEGER,
-  cws_version      VARCHAR(10),
-  db_vendor        VARCHAR(25),
-  installed        TIMESTAMP DEFAULT now(),
+    id               INTEGER AUTO_INCREMENT,
+    schema_version   INTEGER,
+    cws_version      VARCHAR(10),
+    db_vendor        VARCHAR(25),
+    installed        TIMESTAMP DEFAULT now(),
 
-  /* Primary & Foreign Keys */
-  CONSTRAINT version_pk                     PRIMARY KEY (id),
+    /* Primary & Foreign Keys */
+    CONSTRAINT version_pk                     PRIMARY KEY (id),
 
-   /* Unique Constraints */
-  CONSTRAINT version_unique_version         UNIQUE (schema_version, cws_version),
+    /* Unique Constraints */
+    CONSTRAINT version_unique_version         UNIQUE (schema_version, cws_version),
 
-  /* Not Null Constraints */
-  CONSTRAINT version_notnull_id             CHECK (id IS NOT NULL),
-  CONSTRAINT version_notnull_db_version     CHECK (schema_version IS NOT NULL),
-  CONSTRAINT version_notnull_cws_version    CHECK (cws_version IS NOT NULL),
-  CONSTRAINT version_notnull_db_vendor      CHECK (db_vendor IS NOT NULL),
-  CONSTRAINT version_notnull_installed      CHECK (installed IS NOT NULL)
+    /* Not Null Constraints */
+    CONSTRAINT version_notnull_id             CHECK (id IS NOT NULL),
+    CONSTRAINT version_notnull_db_version     CHECK (schema_version IS NOT NULL),
+    CONSTRAINT version_notnull_cws_version    CHECK (cws_version IS NOT NULL),
+    CONSTRAINT version_notnull_db_vendor      CHECK (db_vendor IS NOT NULL),
+    CONSTRAINT version_notnull_installed      CHECK (installed IS NOT NULL)
 );
 -- Initial Database Version is 1, initial Production CWS release is 1.0.0
 INSERT INTO cws_versions(schema_version, cws_version, db_vendor) VALUES (1, '1.0.0', 'H2');
 -- First feature release, CWS 1.1.x results requires an update of the DB
 INSERT INTO cws_versions(schema_version, cws_version, db_vendor) VALUES (2, '1.1.0', 'H2');
+-- Second feature release, CWS 1.2.x results requires an update of the DB
+INSERT INTO cws_versions(schema_version, cws_version, db_vendor) VALUES (3, '1.2.0', 'H2');
 
 -- =============================================================================
 -- The CWS is configured via a set of property values, which are all stored in
@@ -71,23 +73,23 @@ INSERT INTO cws_versions(schema_version, cws_version, db_vendor) VALUES (2, '1.1
 -- documentation.
 -- =============================================================================
 CREATE TABLE cws_settings (
-  id               INTEGER AUTO_INCREMENT,
-  name             VARCHAR(256),
-  setting          VARCHAR(256),
-  altered          TIMESTAMP DEFAULT now(),
-  added            TIMESTAMP DEFAULT now(),
+    id               INTEGER AUTO_INCREMENT,
+    name             VARCHAR(256),
+    setting          VARCHAR(256),
+    altered          TIMESTAMP DEFAULT now(),
+    added            TIMESTAMP DEFAULT now(),
 
-  /* Primary & Foreign Keys */
-  CONSTRAINT setting_pk                     PRIMARY KEY (id),
+    /* Primary & Foreign Keys */
+    CONSTRAINT setting_pk                     PRIMARY KEY (id),
 
-  /* Unique Constraints */
-  CONSTRAINT setting_unique_name            UNIQUE (name),
+    /* Unique Constraints */
+    CONSTRAINT setting_unique_name            UNIQUE (name),
 
-  /* Not Null Constraints */
-  CONSTRAINT setting_notnull_id             CHECK (id IS NOT NULL),
-  CONSTRAINT setting_notnull_name           CHECK (name IS NOT NULL),
-  CONSTRAINT setting_notnull_altered        CHECK (altered IS NOT NULL),
-  CONSTRAINT setting_notnull_added          CHECK (added IS NOT NULL)
+    /* Not Null Constraints */
+    CONSTRAINT setting_notnull_id             CHECK (id IS NOT NULL),
+    CONSTRAINT setting_notnull_name           CHECK (name IS NOT NULL),
+    CONSTRAINT setting_notnull_altered        CHECK (altered IS NOT NULL),
+    CONSTRAINT setting_notnull_added          CHECK (added IS NOT NULL)
 );
 
 -- =============================================================================
@@ -123,43 +125,43 @@ CREATE TABLE cws_settings (
 -- not been logged out.
 -- =============================================================================
 CREATE TABLE cws_members (
-  id               INTEGER AUTO_INCREMENT,
-  external_id      VARCHAR(36),
-  name             VARCHAR_IGNORECASE(75), -- Member Authentication information
-  salt             VARCHAR(256),
-  pbe_algorithm    VARCHAR(10) DEFAULT 'PBE_256',
-  rsa_algorithm    VARCHAR(10) DEFAULT 'RSA_2048',
-  external_key     LONGVARCHAR,    -- External Public Key, with unknown length
-  public_key       VARCHAR(3072),  -- Public Key, stored armored
-  private_key      VARCHAR(16384), -- Private Key, stored encrypted & armored
-  member_role      VARCHAR(10) DEFAULT 'STANDARD',
-  session_checksum VARCHAR(256),   -- MasterKey Checksum of the given Session
-  session_crypto   VARCHAR(16384), -- Private Key, stored encrypted & armored
-  session_expire   TIMESTAMP,      -- Time, when the Session expires
-  altered          TIMESTAMP DEFAULT now(),
-  added            TIMESTAMP DEFAULT now(),
+    id               INTEGER AUTO_INCREMENT,
+    external_id      VARCHAR(36),
+    name             VARCHAR_IGNORECASE(75), -- Member Authentication information
+    salt             VARCHAR(256),
+    pbe_algorithm    VARCHAR(10) DEFAULT 'PBE_256',
+    rsa_algorithm    VARCHAR(10) DEFAULT 'RSA_2048',
+    external_key     LONGVARCHAR,    -- External Public Key, with unknown length
+    public_key       VARCHAR(3072),  -- Public Key, stored armored
+    private_key      VARCHAR(16384), -- Private Key, stored encrypted & armored
+    member_role      VARCHAR(10) DEFAULT 'STANDARD',
+    session_checksum VARCHAR(256),   -- MasterKey Checksum of the given Session
+    session_crypto   VARCHAR(16384), -- Private Key, stored encrypted & armored
+    session_expire   TIMESTAMP,      -- Time, when the Session expires
+    altered          TIMESTAMP DEFAULT now(),
+    added            TIMESTAMP DEFAULT now(),
 
-  /* Primary & Foreign Keys */
-  CONSTRAINT member_pk                      PRIMARY KEY (id),
+    /* Primary & Foreign Keys */
+    CONSTRAINT member_pk                      PRIMARY KEY (id),
 
-  /* Unique Constraints */
-  CONSTRAINT member_unique_external_id      UNIQUE (external_id),
-  CONSTRAINT member_unique_name             UNIQUE (name),
-  CONSTRAINT member_unique_salt             UNIQUE (salt),
-  CONSTRAINT member_unique_session_checksum UNIQUE (session_checksum),
+    /* Unique Constraints */
+    CONSTRAINT member_unique_external_id      UNIQUE (external_id),
+    CONSTRAINT member_unique_name             UNIQUE (name),
+    CONSTRAINT member_unique_salt             UNIQUE (salt),
+    CONSTRAINT member_unique_session_checksum UNIQUE (session_checksum),
 
-  /* Not Null Constraints */
-  CONSTRAINT member_notnull_id              CHECK (id IS NOT NULL),
-  CONSTRAINT member_notnull_external_id     CHECK (external_id IS NOT NULL),
-  CONSTRAINT member_notnull_name            CHECK (name IS NOT NULL),
-  CONSTRAINT member_notnull_salt            CHECK (salt IS NOT NULL),
-  CONSTRAINT member_notnull_pbe_algorithm   CHECK (pbe_algorithm IS NOT NULL),
-  CONSTRAINT member_notnull_rsa_algorithm   CHECK (rsa_algorithm IS NOT NULL),
-  CONSTRAINT member_notnull_public_key      CHECK (public_key IS NOT NULL),
-  CONSTRAINT member_notnull_private_key     CHECK (private_key IS NOT NULL),
-  CONSTRAINT member_notnull_role            CHECK (member_role IS NOT NULL),
-  CONSTRAINT member_notnull_altered         CHECK (altered IS NOT NULL),
-  CONSTRAINT member_notnull_added           CHECK (added IS NOT NULL)
+    /* Not Null Constraints */
+    CONSTRAINT member_notnull_id              CHECK (id IS NOT NULL),
+    CONSTRAINT member_notnull_external_id     CHECK (external_id IS NOT NULL),
+    CONSTRAINT member_notnull_name            CHECK (name IS NOT NULL),
+    CONSTRAINT member_notnull_salt            CHECK (salt IS NOT NULL),
+    CONSTRAINT member_notnull_pbe_algorithm   CHECK (pbe_algorithm IS NOT NULL),
+    CONSTRAINT member_notnull_rsa_algorithm   CHECK (rsa_algorithm IS NOT NULL),
+    CONSTRAINT member_notnull_public_key      CHECK (public_key IS NOT NULL),
+    CONSTRAINT member_notnull_private_key     CHECK (private_key IS NOT NULL),
+    CONSTRAINT member_notnull_role            CHECK (member_role IS NOT NULL),
+    CONSTRAINT member_notnull_altered         CHECK (altered IS NOT NULL),
+    CONSTRAINT member_notnull_added           CHECK (added IS NOT NULL)
 );
 
 -- =============================================================================
@@ -170,26 +172,26 @@ CREATE TABLE cws_members (
 -- Circle Administrator must be added, which cannot be the System Administrator.
 -- =============================================================================
 CREATE TABLE cws_circles (
-  id               INTEGER AUTO_INCREMENT,
-  external_id      VARCHAR(36),
-  name             VARCHAR_IGNORECASE(75),
-  external_key     LONGVARBINARY,  -- External Circle Key, with unknown length
-  altered          TIMESTAMP DEFAULT now(),
-  added            TIMESTAMP DEFAULT now(),
+    id               INTEGER AUTO_INCREMENT,
+    external_id      VARCHAR(36),
+    name             VARCHAR_IGNORECASE(75),
+    external_key     LONGVARBINARY,  -- External Circle Key, with unknown length
+    altered          TIMESTAMP DEFAULT now(),
+    added            TIMESTAMP DEFAULT now(),
 
-  /* Primary & Foreign Keys */
-  CONSTRAINT circle_pk                      PRIMARY KEY (id),
+    /* Primary & Foreign Keys */
+    CONSTRAINT circle_pk                      PRIMARY KEY (id),
 
-  /* Unique Constraints */
-  CONSTRAINT circle_unique_external_id      UNIQUE (external_id),
-  CONSTRAINT circle_unique_name             UNIQUE (name),
+    /* Unique Constraints */
+    CONSTRAINT circle_unique_external_id      UNIQUE (external_id),
+    CONSTRAINT circle_unique_name             UNIQUE (name),
 
-  /* Not Null Constraints */
-  CONSTRAINT circle_notnull_id              CHECK (id IS NOT NULL),
-  CONSTRAINT circle_notnull_external_id     CHECK (external_id IS NOT NULL),
-  CONSTRAINT circle_notnull_name            CHECK (name IS NOT NULL),
-  CONSTRAINT circle_notnull_altered         CHECK (altered IS NOT NULL),
-  CONSTRAINT circle_notnull_added           CHECK (added IS NOT NULL)
+    /* Not Null Constraints */
+    CONSTRAINT circle_notnull_id              CHECK (id IS NOT NULL),
+    CONSTRAINT circle_notnull_external_id     CHECK (external_id IS NOT NULL),
+    CONSTRAINT circle_notnull_name            CHECK (name IS NOT NULL),
+    CONSTRAINT circle_notnull_altered         CHECK (altered IS NOT NULL),
+    CONSTRAINT circle_notnull_added           CHECK (added IS NOT NULL)
 );
 
 -- =============================================================================
@@ -239,23 +241,23 @@ CREATE TABLE cws_circles (
 -- simply refuse to process the data.
 -- =============================================================================
 CREATE TABLE cws_keys (
-  id               INTEGER AUTO_INCREMENT,
-  algorithm        VARCHAR(256) DEFAULT 'AES128',
-  status           VARCHAR(256) DEFAULT 'ACTIVE',
-  expires          TIMESTAMP,
-  grace_period     INTEGER,
-  altered          TIMESTAMP   DEFAULT now(),
-  added            TIMESTAMP   DEFAULT now(),
+    id               INTEGER AUTO_INCREMENT,
+    algorithm        VARCHAR(256) DEFAULT 'AES128',
+    status           VARCHAR(256) DEFAULT 'ACTIVE',
+    expires          TIMESTAMP,
+    grace_period     INTEGER,
+    altered          TIMESTAMP   DEFAULT now(),
+    added            TIMESTAMP   DEFAULT now(),
 
-  /* Primary & Foreign Keys */
-  CONSTRAINT key_pk                         PRIMARY KEY (id),
+    /* Primary & Foreign Keys */
+    CONSTRAINT key_pk                         PRIMARY KEY (id),
 
-  /* Not Null Constraints */
-  CONSTRAINT key_notnull_id                 CHECK (id IS NOT NULL),
-  CONSTRAINT key_notnull_algorithm          CHECK (algorithm IS NOT NULL),
-  CONSTRAINT key_notnull_status             CHECK (status IS NOT NULL),
-  CONSTRAINT key_notnull_altered            CHECK (altered  IS NOT NULL),
-  CONSTRAINT key_notnull_added              CHECK (added IS NOT NULL)
+    /* Not Null Constraints */
+    CONSTRAINT key_notnull_id                 CHECK (id IS NOT NULL),
+    CONSTRAINT key_notnull_algorithm          CHECK (algorithm IS NOT NULL),
+    CONSTRAINT key_notnull_status             CHECK (status IS NOT NULL),
+    CONSTRAINT key_notnull_altered            CHECK (altered  IS NOT NULL),
+    CONSTRAINT key_notnull_added              CHECK (added IS NOT NULL)
 );
 
 -- =============================================================================
@@ -290,33 +292,33 @@ CREATE TABLE cws_keys (
 -- stored is simply "Not Applicable".
 -- =============================================================================
 CREATE TABLE cws_trustees (
-  id               INTEGER AUTO_INCREMENT,
-  member_id        INTEGER,
-  circle_id        INTEGER,
-  key_id           INTEGER,
-  trust_level      VARCHAR(10),
-  circle_key       VARCHAR(8192) DEFAULT 'Not Applicable',
-  altered          TIMESTAMP     DEFAULT now(),
-  added            TIMESTAMP     DEFAULT now(),
+    id               INTEGER AUTO_INCREMENT,
+    member_id        INTEGER,
+    circle_id        INTEGER,
+    key_id           INTEGER,
+    trust_level      VARCHAR(10),
+    circle_key       VARCHAR(8192) DEFAULT 'Not Applicable',
+    altered          TIMESTAMP     DEFAULT now(),
+    added            TIMESTAMP     DEFAULT now(),
 
-  /* Primary & Foreign Keys */
-  CONSTRAINT trustee_pk                     PRIMARY KEY (id),
-  CONSTRAINT trustee_member_fk              FOREIGN KEY (member_id) REFERENCES cws_members (id) ON DELETE CASCADE,
-  CONSTRAINT trustee_circle_fk              FOREIGN KEY (circle_id) REFERENCES cws_circles (id) ON DELETE CASCADE,
-  CONSTRAINT trustee_key_fk                 FOREIGN KEY (key_id) REFERENCES cws_keys (id),
+    /* Primary & Foreign Keys */
+    CONSTRAINT trustee_pk                     PRIMARY KEY (id),
+    CONSTRAINT trustee_member_fk              FOREIGN KEY (member_id) REFERENCES cws_members (id) ON DELETE CASCADE,
+    CONSTRAINT trustee_circle_fk              FOREIGN KEY (circle_id) REFERENCES cws_circles (id) ON DELETE CASCADE,
+    CONSTRAINT trustee_key_fk                 FOREIGN KEY (key_id) REFERENCES cws_keys (id),
 
-  /* Unique Constraints */
-  CONSTRAINT trustee_unique_fks             UNIQUE (member_id, circle_id, key_id),
+    /* Unique Constraints */
+    CONSTRAINT trustee_unique_fks             UNIQUE (member_id, circle_id, key_id),
 
-  /* Not Null Constraints */
-  CONSTRAINT trustee_notnull_id             CHECK (id IS NOT NULL),
-  CONSTRAINT trustee_notnull_member_id      CHECK (member_id IS NOT NULL),
-  CONSTRAINT trustee_notnull_circle_id      CHECK (circle_id IS NOT NULL),
-  CONSTRAINT trustee_notnull_key_id         CHECK (key_id IS NOT NULL),
-  CONSTRAINT trustee_notnull_trust_level    CHECK (trust_level IS NOT NULL),
-  CONSTRAINT trustee_notnull_circle_key     CHECK (circle_key IS NOT NULL),
-  CONSTRAINT trustee_notnull_altered        CHECK (altered IS NOT NULL),
-  CONSTRAINT trustee_notnull_added          CHECK (added IS NOT NULL)
+    /* Not Null Constraints */
+    CONSTRAINT trustee_notnull_id             CHECK (id IS NOT NULL),
+    CONSTRAINT trustee_notnull_member_id      CHECK (member_id IS NOT NULL),
+    CONSTRAINT trustee_notnull_circle_id      CHECK (circle_id IS NOT NULL),
+    CONSTRAINT trustee_notnull_key_id         CHECK (key_id IS NOT NULL),
+    CONSTRAINT trustee_notnull_trust_level    CHECK (trust_level IS NOT NULL),
+    CONSTRAINT trustee_notnull_circle_key     CHECK (circle_key IS NOT NULL),
+    CONSTRAINT trustee_notnull_altered        CHECK (altered IS NOT NULL),
+    CONSTRAINT trustee_notnull_added          CHECK (added IS NOT NULL)
 );
 
 -- =============================================================================
@@ -331,24 +333,24 @@ CREATE TABLE cws_trustees (
 -- better.
 -- =============================================================================
 CREATE TABLE cws_datatypes (
-  id               INTEGER AUTO_INCREMENT,
-  datatype_name    VARCHAR(75),
-  datatype_value   VARCHAR(256),
-  altered          TIMESTAMP DEFAULT now(),
-  added            TIMESTAMP DEFAULT now(),
+    id               INTEGER AUTO_INCREMENT,
+    datatype_name    VARCHAR(75),
+    datatype_value   VARCHAR(256),
+    altered          TIMESTAMP DEFAULT now(),
+    added            TIMESTAMP DEFAULT now(),
 
-  /* Primary & Foreign Keys */
-  CONSTRAINT datatype_pk                    PRIMARY KEY (id),
+    /* Primary & Foreign Keys */
+    CONSTRAINT datatype_pk                    PRIMARY KEY (id),
 
-  /* Unique Constraints */
-  CONSTRAINT datatype_unique_name           UNIQUE (datatype_name),
+    /* Unique Constraints */
+    CONSTRAINT datatype_unique_name           UNIQUE (datatype_name),
 
-  /* Not Null Constraints */
-  CONSTRAINT datatype_notnull_id            CHECK (id IS NOT NULL),
-  CONSTRAINT datatype_notnull_type_name     CHECK (datatype_name IS NOT NULL),
-  CONSTRAINT datatype_notnull_type_value    CHECK (datatype_value IS NOT NULL),
-  CONSTRAINT datatype_notnull_altered       CHECK (altered IS NOT NULL),
-  CONSTRAINT datatype_notnull_added         CHECK (added IS NOT NULL)
+    /* Not Null Constraints */
+    CONSTRAINT datatype_notnull_id            CHECK (id IS NOT NULL),
+    CONSTRAINT datatype_notnull_type_name     CHECK (datatype_name IS NOT NULL),
+    CONSTRAINT datatype_notnull_type_value    CHECK (datatype_value IS NOT NULL),
+    CONSTRAINT datatype_notnull_altered       CHECK (altered IS NOT NULL),
+    CONSTRAINT datatype_notnull_added         CHECK (added IS NOT NULL)
 );
 
 -- Default, we have 1 Object Type, which is the folder. The rest is left to
@@ -376,7 +378,7 @@ INSERT INTO cws_datatypes (datatype_name, datatype_value) VALUES
 -- that the parent Id cannot be larger than the current Id. This way, it is
 -- possible to have a recursive structure, but not to create loops.
 --   Unfortunately, having the parent Id as an Integer and not a String will
--- require additional lookup's, but it is a small price to pay to have a
+-- require additional lookups, but it is a small price to pay to have a
 -- guarantee that no loops can occur in the model.
 --   The structure is created as a recursive data structure, where the parentId
 -- is referencing a parent Folder, however - there is a check added, so it is
@@ -384,31 +386,31 @@ INSERT INTO cws_datatypes (datatype_name, datatype_value) VALUES
 -- smaller than the current Id.
 -- =============================================================================
 CREATE TABLE cws_metadata (
-  id               INTEGER AUTO_INCREMENT,
-  external_id      VARCHAR(36),
-  parent_id        INTEGER,
-  circle_id        INTEGER,
-  datatype_id      INTEGER,
-  name             VARCHAR(75),
-  altered          TIMESTAMP DEFAULT now(),
-  added            TIMESTAMP DEFAULT now(),
+    id               INTEGER AUTO_INCREMENT,
+    external_id      VARCHAR(36),
+    parent_id        INTEGER,
+    circle_id        INTEGER,
+    datatype_id      INTEGER,
+    name             VARCHAR(75),
+    altered          TIMESTAMP DEFAULT now(),
+    added            TIMESTAMP DEFAULT now(),
 
-  /* Primary & Foreign Keys */
-  CONSTRAINT metadata_pk                    PRIMARY KEY (id),
-  CONSTRAINT metadata_circle_fk             FOREIGN KEY (circle_id) REFERENCES cws_circles (id) ON DELETE CASCADE,
-  CONSTRAINT metadata_datatype_fk           FOREIGN KEY (datatype_id) REFERENCES cws_datatypes (id),
+    /* Primary & Foreign Keys */
+    CONSTRAINT metadata_pk                    PRIMARY KEY (id),
+    CONSTRAINT metadata_circle_fk             FOREIGN KEY (circle_id) REFERENCES cws_circles (id) ON DELETE CASCADE,
+    CONSTRAINT metadata_datatype_fk           FOREIGN KEY (datatype_id) REFERENCES cws_datatypes (id),
 
-  /* Unique Constraints */
-  CONSTRAINT metadata_unique_external_id    UNIQUE (external_id),
+    /* Unique Constraints */
+    CONSTRAINT metadata_unique_external_id    UNIQUE (external_id),
 
-  /* Other Constraints */
-  CONSTRAINT metadata_notnull_id            CHECK (id IS NOT NULL),
-  CONSTRAINT metadata_notnull_external_id   CHECK (external_id IS NOT NULL),
-  CONSTRAINT metadata_notafter_parent_id    CHECK (parent_id < id),
-  CONSTRAINT metadata_notnull_circle_id     CHECK (circle_id IS NOT NULL),
-  CONSTRAINT metadata_notnull_type_id       CHECK (datatype_id IS NOT NULL),
-  CONSTRAINT metadata_notnull_altered       CHECK (altered IS NOT NULL),
-  CONSTRAINT metadata_notnull_added         CHECK (added IS NOT NULL)
+    /* Other Constraints */
+    CONSTRAINT metadata_notnull_id            CHECK (id IS NOT NULL),
+    CONSTRAINT metadata_notnull_external_id   CHECK (external_id IS NOT NULL),
+    CONSTRAINT metadata_before_parent_id    CHECK (parent_id < id),
+    CONSTRAINT metadata_notnull_circle_id     CHECK (circle_id IS NOT NULL),
+    CONSTRAINT metadata_notnull_type_id       CHECK (datatype_id IS NOT NULL),
+    CONSTRAINT metadata_notnull_altered       CHECK (altered IS NOT NULL),
+    CONSTRAINT metadata_notnull_added         CHECK (added IS NOT NULL)
 );
 
 -- =============================================================================
@@ -420,33 +422,34 @@ CREATE TABLE cws_metadata (
 -- used.
 -- =============================================================================
 CREATE TABLE cws_data (
-  id               INTEGER AUTO_INCREMENT,
-  metadata_id      INTEGER,
-  key_id           INTEGER,
-  encrypted_data   LONGVARBINARY,
-  initial_vector   VARCHAR(256), -- Storing it armored
-  checksum         VARCHAR(256),
-  sanity_status    VARCHAR(256) DEFAULT 'Ok',
-  sanity_checked   TIMESTAMP DEFAULT now(),
-  altered          TIMESTAMP DEFAULT now(),
-  added            TIMESTAMP DEFAULT now(),
+    id               INTEGER AUTO_INCREMENT,
+    metadata_id      INTEGER,
+    key_id           INTEGER,
+    encrypted_data   LONGVARBINARY,
+    size             INTEGER   DEFAULT 0,
+    initial_vector   VARCHAR(256), -- Storing it armored
+    checksum         VARCHAR(256),
+    sanity_status    VARCHAR(256) DEFAULT 'Ok',
+    sanity_checked   TIMESTAMP DEFAULT now(),
+    altered          TIMESTAMP DEFAULT now(),
+    added            TIMESTAMP DEFAULT now(),
 
-  /* Primary & Foreign Keys */
-  CONSTRAINT data_pk                        PRIMARY KEY (id),
-  CONSTRAINT data_metadata_fk               FOREIGN KEY (metadata_id) REFERENCES cws_metadata (id) ON DELETE CASCADE,
-  CONSTRAINT data_key_fk                    FOREIGN KEY (key_id) REFERENCES cws_keys (id) ON DELETE CASCADE,
+    /* Primary & Foreign Keys */
+    CONSTRAINT data_pk                        PRIMARY KEY (id),
+    CONSTRAINT data_metadata_fk               FOREIGN KEY (metadata_id) REFERENCES cws_metadata (id) ON DELETE CASCADE,
+    CONSTRAINT data_key_fk                    FOREIGN KEY (key_id) REFERENCES cws_keys (id) ON DELETE CASCADE,
 
-  /* Not Null Constraints */
-  CONSTRAINT data_notnull_id                CHECK (id IS NOT NULL),
-  CONSTRAINT data_notnull_metadata_id       CHECK (metadata_id IS NOT NULL),
-  CONSTRAINT data_notnull_key_id            CHECK (key_id IS NOT NULL),
-  CONSTRAINT data_notnull_data              CHECK (encrypted_data IS NOT NULL),
-  CONSTRAINT data_notnull_initial_vector    CHECK (initial_vector IS NOT NULL),
-  CONSTRAINT data_notnull_checksum          CHECK (checksum IS NOT NULL),
-  CONSTRAINT data_notnull_sanity_status     CHECK (sanity_status IS NOT NULL),
-  CONSTRAINT data_notnull_sanity_checked    CHECK (sanity_checked IS NOT NULL),
-  CONSTRAINT data_notnull_altered           CHECK (altered IS NOT NULL),
-  CONSTRAINT data_notnull_added             CHECK (added IS NOT NULL)
+    /* Not Null Constraints */
+    CONSTRAINT data_notnull_id                CHECK (id IS NOT NULL),
+    CONSTRAINT data_notnull_metadata_id       CHECK (metadata_id IS NOT NULL),
+    CONSTRAINT data_notnull_key_id            CHECK (key_id IS NOT NULL),
+    CONSTRAINT data_notnull_data              CHECK (encrypted_data IS NOT NULL),
+    CONSTRAINT data_notnull_initial_vector    CHECK (initial_vector IS NOT NULL),
+    CONSTRAINT data_notnull_checksum          CHECK (checksum IS NOT NULL),
+    CONSTRAINT data_notnull_sanity_status     CHECK (sanity_status IS NOT NULL),
+    CONSTRAINT data_notnull_sanity_checked    CHECK (sanity_checked IS NOT NULL),
+    CONSTRAINT data_notnull_altered           CHECK (altered IS NOT NULL),
+    CONSTRAINT data_notnull_added             CHECK (added IS NOT NULL)
 );
 
 -- =============================================================================
@@ -455,27 +458,27 @@ CREATE TABLE cws_data (
 -- the signature.
 -- =============================================================================
 CREATE TABLE cws_signatures (
-  id               INTEGER AUTO_INCREMENT,
-  public_key       VARCHAR(3072), -- Public Key, stored armored
-  checksum         VARCHAR(256),
-  member_id        INTEGER,
-  expires          TIMESTAMP,
-  verifications    INTEGER DEFAULT 0,
-  altered          TIMESTAMP DEFAULT now(),
-  added            TIMESTAMP DEFAULT now(),
+    id               INTEGER AUTO_INCREMENT,
+    public_key       VARCHAR(3072), -- Public Key, stored armored
+    checksum         VARCHAR(256),
+    member_id        INTEGER,
+    expires          TIMESTAMP,
+    verifications    INTEGER DEFAULT 0,
+    altered          TIMESTAMP DEFAULT now(),
+    added            TIMESTAMP DEFAULT now(),
 
-  /* Primary & Foreign Keys */
-  CONSTRAINT signature_pk                   PRIMARY KEY (id),
-  CONSTRAINT signature_member_fk            FOREIGN KEY (member_id) REFERENCES cws_members (id) ON DELETE CASCADE,
+    /* Primary & Foreign Keys */
+    CONSTRAINT signature_pk                   PRIMARY KEY (id),
+    CONSTRAINT signature_member_fk            FOREIGN KEY (member_id) REFERENCES cws_members (id) ON DELETE CASCADE,
 
-  /* Unique Constraints */
-  CONSTRAINT signature_unique_checksum      UNIQUE (checksum),
+    /* Unique Constraints */
+    CONSTRAINT signature_unique_checksum      UNIQUE (checksum),
 
-  /* Not Null Constraints */
-  CONSTRAINT signarure_notnull_id           CHECK (id IS NOT NULL),
-  CONSTRAINT signature_notnull_public_key   CHECK (public_key IS NOT NULL),
-  CONSTRAINT signature_notnull_checksum     CHECK (checksum IS NOT NULL),
-  CONSTRAINT signarure_notnull_member_id    CHECK (member_id IS NOT NULL),
-  CONSTRAINT signarure_notnull_altered      CHECK (altered IS NOT NULL),
-  CONSTRAINT signarure_notnull_added        CHECK (added IS NOT NULL)
+    /* Not Null Constraints */
+    CONSTRAINT signature_notnull_id           CHECK (id IS NOT NULL),
+    CONSTRAINT signature_notnull_public_key   CHECK (public_key IS NOT NULL),
+    CONSTRAINT signature_notnull_checksum     CHECK (checksum IS NOT NULL),
+    CONSTRAINT signature_notnull_member_id    CHECK (member_id IS NOT NULL),
+    CONSTRAINT signature_notnull_altered      CHECK (altered IS NOT NULL),
+    CONSTRAINT signature_notnull_added        CHECK (added IS NOT NULL)
 );
