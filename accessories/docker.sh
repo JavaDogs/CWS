@@ -1,7 +1,7 @@
 #!/bin/bash
 
 port=${CWS_PORT:-}
-if [[ "${port}" = "" ]]; then
+if [[ "${port}" == "" ]]; then
     port=8080
 fi
 
@@ -79,8 +79,8 @@ function doBuild() {
         http_proxy=${http_proxy:-}
         if [[ "${http_proxy}" != "" ]]; then
             # Proxy can be defined in many ways, to ensure that it has the correct
-            # format, the protocol and slashes are first strippped, if they were
-            # set - to prevent that they are either missing or added douple here
+            # format, the protocol and slashes are first stripped, if they were
+            # set - to prevent that they are either missing or added double here
             proxy=${http_proxy//http:\/\//}
             proxy=${proxy//\//}
             echo "Acquire::http::Proxy \"http://${proxy}/\";" > docker/apt.conf
@@ -100,7 +100,7 @@ function doBuild() {
         echo
         echo "${image^^} Docker image build completed. Will now run the following command:"
         echo "$ docker run --name ${container} -d -p ${port}:8080 ${image}"
-        docker run --name ${container} -d -p ${port}:8080 ${image} >/dev/null
+        docker run --name ${container} -d -p ${port}:8080 ${image} > /dev/null
         echo
         checkAlive
     fi
@@ -112,7 +112,7 @@ function doBuild() {
 function doStart() {
     if (exists && ! running); then
         echo "Starting the ${container} container"
-        docker start ${container} >/dev/null
+        docker start ${container} > /dev/null
         checkAlive
     else
         showHelp
@@ -125,7 +125,7 @@ function doStart() {
 function doStop() {
     if (exists && running); then
         echo "Stopping the ${container} container"
-        docker stop ${container} >/dev/null
+        docker stop ${container} > /dev/null
     else
         showHelp
     fi
@@ -173,7 +173,7 @@ function doInteractive() {
 function doRemove() {
     if (exists && ! running); then
         echo "Removing the ${container} container & image"
-        docker rm ${container} && docker rmi ${image} >/dev/null
+        docker rm ${container} && docker rmi ${image} > /dev/null
     else
         showHelp
     fi
@@ -205,19 +205,19 @@ function checkAlive() {
 # ==============================================================================
 # Main logic
 # ==============================================================================
-if [[ "${action}" = "build" ]]; then
+if [[ "${action}" == "build" ]]; then
     doBuild
-elif [[ "${action}" = "start" ]]; then
+elif [[ "${action}" == "start" ]]; then
     doStart
-elif [[ "${action}" = "stop" ]]; then
+elif [[ "${action}" == "stop" ]]; then
     doStop
-elif [[ "${action}" = "logs" ]]; then
+elif [[ "${action}" == "logs" ]]; then
     doLogs
-elif [[ "${action}" = "status" ]]; then
+elif [[ "${action}" == "status" ]]; then
     doStatus
-elif [[ "${action}" = "it" || "${action}" = "interactive" ]]; then
+elif [[ "${action}" == "it" || "${action}" == "interactive" ]]; then
     doInteractive
-elif [[ "${action}" = "remove" ]]; then
+elif [[ "${action}" == "remove" ]]; then
     doRemove
 else
     showHelp
