@@ -7,7 +7,7 @@ fi
 
 action=${1}
 image="cws"
-container="${image}-1.1"
+container="${image}-2.0"
 source release/bin/cwsFunctions.sh
 
 # ==============================================================================
@@ -195,8 +195,7 @@ function checkAlive() {
     echo
 
     if [[ ${retries} -le 30 ]]; then
-        json=$(curl --silent --header "Content-Type: application/json" --request POST "http://localhost:${port}/cws/api/version")
-        echo "${image^^} version available: $(inspectResponse "${json}" "version")"
+        echo "${image^^} version available: $(cwsVersion)"
     else
         echo "Error starting ${image^^} :-("
     fi
